@@ -43,3 +43,24 @@ testRunner.testCase.testSuite.testCases['AddEmployee'].testSteps['add'].setPrope
 def addTestStep=testRunner.testCase.testSuite.testCases["AddEmployee"].testSteps["add"]
 def contextAddEmployee= new WsdlTestRunContext(addTestStep); 
 addTestStep.run(testRunner,contextAddEmployee)
+
+//Automate get employee
+
+//Add variable addReq to get to the Request propetry to read the request details
+def getReq = testRunner.testCase.testSuite.testCases['GetEmployee'].testSteps['get'].getPropertyValue("Request") 
+
+//Create XMLholder to read the above xml addreq
+def XmlGet= new XmlHolder(getReq)
+
+//update the mentioned values in the XML
+XmlGet.setNodeValue("//typ:getEmployeeDetails/typ:employeeName",name)
+
+//update the request property with new XML
+def newgetXml=XmlGet.getXml();
+testRunner.testCase.testSuite.testCases['GetEmployee'].testSteps['get'].setPropertyValue("Request",newgetXml)
+//log.info newAddXml
+
+//Call the service i.e. run the request automatically
+def getTestStep=testRunner.testCase.testSuite.testCases["GetEmployee"].testSteps["get"]
+def contextGetEmployee= new WsdlTestRunContext(getTestStep); 
+getTestStep.run(testRunner,contextGetEmployee)
